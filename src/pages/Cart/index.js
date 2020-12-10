@@ -17,7 +17,8 @@ import {
   ButtonClodeModal,
   TextButtonClose,
   QtdText,
-  View
+  View,
+  TypeProductTitle
 } from "./styles";
 
 const Cart = ({ navigation }) => {
@@ -27,7 +28,7 @@ const Cart = ({ navigation }) => {
   const [saldo, setSaldo] = useState("");
   const [produtoQtd, setProdutoQtd] = useState([]);
   const { data, mutate } = Fetcher("/filtro/produtos?selecionado=true");
-
+  
   useEffect(() => {
     api.get("/filtro/produtos?selecionado=true").then((res) => {
       const total = res.data.reduce(
@@ -35,6 +36,7 @@ const Cart = ({ navigation }) => {
           sum + preco_produto * quantidade_selecionada,
         0
       );
+      
       setTotal(total);
     });
   }, [data]);
@@ -47,6 +49,12 @@ const Cart = ({ navigation }) => {
     }
     getUser();
   }, []);
+
+  async function handleLogout() {
+    await AsyncStorage.removeItem("user").then(() => {
+      navigation.navigate("Home")
+    })
+  }
 
   const handleRemoveCart = useCallback(
     (id) => {
@@ -69,8 +77,11 @@ const Cart = ({ navigation }) => {
 
   const Pedido = async () => {
     const produtos = data.map(item => item._id)
+    console.log(user.saldo_usuario)
+    console.log(total)
 
-    api.post(`pedidos/${user._id}`, { total, produtos })
+    if (user.saldo_usuario>=total) {  
+      api.post(`pedidos/${user._id}`, { total, produtos })
       .then((res) => {
         if(res.status === 200) {
           data.map((item) => {
@@ -82,19 +93,23 @@ const Cart = ({ navigation }) => {
               })
               .catch((err) => console.log(err));
               setTotal(0);
-          });
+        });
           api.get('/usuariosmobile.details/'+user._id)
             .then(res => {
               const novoSaldo = res.data.saldo_usuario - total
-              api.patch(`/usuariosmobile/${user._id}`,{ saldo_usuario: novoSaldo })
+              api.patch(`/usuariosmobile/${user._id}`,{ saldo_usuario: novoSaldo.toFixed(2) })
               .then(res => console.log(res.data))
                .catch(err => console.log(err))
-            })
+            });         
           
         }
       })
       .catch(err => console.log(err))
-  };
+
+    } else {
+      Alert.alert("Saldo insuficiente. \nFiado só amanhã.")    }
+    
+  }
 
   if (!data) return <Text>Carregando...</Text>;
 
@@ -105,9 +120,13 @@ const Cart = ({ navigation }) => {
           <Icon name="arrowleft" size={25} />
         </TextButtonClose>
         <TextButtonClose>Voltar para vitrine</TextButtonClose>
+        <Button title="Sair" onPress={handleLogout} />
       </ButtonClodeModal>
 
       <ContainerList>
+        <TextButtonClose>
+    Saldo disponível: R$ {user.saldo_usuario}
+    </TextButtonClose>
         <FlatList
           data={data}
           numColumns={2}

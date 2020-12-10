@@ -56,8 +56,7 @@ const Vitrine = ({ navigation }) => {
     <>
       <Container>
         <Header>
-          <TitlePage>Página de produtos</TitlePage>
-          
+          <TitlePage>Página de produtos</TitlePage>        
           <ButtonCart>
             <Icon 
               onPress={() => navigation.navigate("Cart")} 
@@ -71,9 +70,13 @@ const Vitrine = ({ navigation }) => {
           
         </Header>
         <ContainerList>
+<TypeProductTitle>
+Saldo disponível: R$ {user.saldo_usuario}
+</TypeProductTitle>
+
           <Title>Bebidas</Title>
           <TypeProductTitle>
-            Aqui na cantina do Ary você não passa sede. Veja abaixo nossas bebidas.
+            Aqui na CANTEENA virtual você não passa sede. Veja abaixo nossas bebidas.
           </TypeProductTitle>
           <FlatList
             data={bebidas}
@@ -95,7 +98,7 @@ const Vitrine = ({ navigation }) => {
         <ContainerList>
           <Title>Salgados</Title>
           <TypeProductTitle>
-            Aqui na cantina do Ary o salgado sai na hora bem quentinho
+            Aqui na CANTEENA virtual o salgado sai na hora bem quentinho
           </TypeProductTitle>
           <FlatList
             data={salgados}
@@ -117,7 +120,7 @@ const Vitrine = ({ navigation }) => {
         <ContainerList>
           <Title>Doces</Title>
           <TypeProductTitle>
-            Aqui na cantina do Ary temos todos os tipos de doces.
+            Aqui na CANTEENA virtual temos todos os tipos de doces.
           </TypeProductTitle>
           <FlatList
             data={doces}

@@ -80,9 +80,9 @@ const Home = ({ navigation }) => {
   return (
     <Container>
       <Texts>
-        <Title>Cantina do Ary</Title>
+        <Title>CANTEENA virtual</Title>
         <TextHome>
-          Bem vindo, esta é a cantina do Ary. Aqui você nem precisa de fila,
+          Bem vindo, esta é a CANTEENA virtual. Aqui você nem precisa de fila,
           basta um clique e pronto.
         </TextHome>
       </Texts>
